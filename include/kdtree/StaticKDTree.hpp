@@ -1,6 +1,8 @@
 #ifndef __STATIC_KD_TREE__
 #define __STATIC_KD_TREE__
 
+// Created by José Ignacio Huby Ochoa
+
 #include <array>
 #include <vector>
 #include <algorithm>

@@ -58,22 +58,19 @@ void doors_simd()
         auto dz = getZPos(door);
         auto dr = getRadiusSq(door);
         auto dt = getTeam(door);
+        auto diff = eve::wide<float>{0};
         auto result = eve::wide<uint32_t>{0};
 
         for (auto const &player : players)
         {
-            auto px = eve::wide<float>{player.xpos};
-            auto py = eve::wide<float>{player.ypos};
-            auto pz = eve::wide<float>{player.zpos};
-            auto pt = eve::wide<uint32_t>{player.team};
-
-            px -= dx;
-            py -= dy;
-            pz -= dz;
-
-            auto dist = px * px + py * py + pz * pz;
-
-            result = eve::if_else((dist < dr) && (dt == pt), 1, result);
+            auto dist = eve::wide<float>{0};
+            diff = dx - player.xpos;
+            dist += diff*diff;
+            diff = dy - player.ypos;
+            dist += diff*diff;
+            diff = dz - player.zpos;
+            dist += diff*diff;
+            result = eve::if_else((dist < dr) && (dt == player.team), 1, result);
         }
         return result; }););
 }

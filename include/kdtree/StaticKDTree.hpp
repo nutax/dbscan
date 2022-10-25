@@ -9,7 +9,7 @@
 #include <cstdint>
 #include "pure_simd/pure_simd.hpp"
 
-namespace pure_simd = psmd;
+namespace psmd = pure_simd;
 
 template <typename value_t, std::size_t DIM>
 class StaticKDTree

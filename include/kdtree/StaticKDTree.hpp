@@ -24,8 +24,8 @@ private:
             return;
 
         std::size_t const axis = depth % DIM;
-        std::sort(indexes.begin() + from, indexes.begin() + to, [axis, &vectors](auto i, auto j)
-                  { return vectors[i][axis] < vectors[j][axis]; });
+        std::sort(indexes.begin() + from, indexes.begin() + to, [axis, this](auto i, auto j)
+                  { return this->vectors[i][axis] < this->vectors[j][axis]; });
 
         std::size_t const median = (from + to) / 2;
 
@@ -58,7 +58,7 @@ private:
         for (std::size_t i = 0; i < DIM; ++i)
         {
             value_t const diff = vector[i] - vnode[i];
-            sqDiff += diff * diff;
+            sqDist += diff * diff;
         }
 
         if (sqDist <= sqRadius)
@@ -75,7 +75,7 @@ public:
         for (std::size_t i = 0; i < indexes.size(); ++i)
             indexes[i] = i;
 
-        buildRecursive(from, to, 0);
+        buildRecursive(0, vectors.size(), 0);
     }
 
     std::vector<std::size_t> inSqRadius(psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity)

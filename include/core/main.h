@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 #include "hello/hello.h"
-#include "doors/doors.h"
-
+#include "core/random.h"
+#include "clustering/dbscan.hpp"
 
 int main(int argc, char **argv);
 

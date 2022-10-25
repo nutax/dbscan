@@ -13,7 +13,7 @@ class StaticKDTree{
     using Vector = std::array<value_t, DIM>;
     
     private:
-    std::vector<Vector> const vectors;
+    std::vector<Vector> const &vectors;
     std::vector<std::size_t> indexes;
 
     void buildRecursive(std::size_t const from, std::size_t const to, std::size_t const depth){

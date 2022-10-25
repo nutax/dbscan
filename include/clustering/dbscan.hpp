@@ -1,0 +1,20 @@
+#ifndef __DBSCAN_HPP__
+#define __DBSCAN_HPP__
+
+#include <vector>
+#include <array>
+#include <pure_simd/pure_simd.hpp>
+#include "kdtree/StaticKDTree.hpp"
+
+namespace pure_simd = psmd;
+
+template <typename value_t, std::size_t DIM>
+std::vector<std::size_t> dbscan(std::vector<psmd::vector<value_t, DIM>> const &rows, value_t const sqRadius, std::size_t minClusterSize)
+{
+    std::vector<std::size_t> res;
+    res.reserve(rows.size() / 100);
+
+    return res;
+}
+
+#endif

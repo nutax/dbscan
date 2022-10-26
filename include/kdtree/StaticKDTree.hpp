@@ -29,8 +29,8 @@ private:
 
         std::size_t const median = (from + to) / 2;
 
-        buildRecursive(vectors, indexes, from, median, depth + 1);
-        buildRecursive(vectors, indexes, median + 1, to, depth + 1);
+        buildRecursive(from, median, depth + 1);
+        buildRecursive(median + 1, to, depth + 1);
     }
 
     void inSqRadiusRecursive(std::vector<std::size_t> &res, psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity, std::size_t const from, std::size_t const to, std::size_t depth)
@@ -71,7 +71,6 @@ private:
 public:
     StaticKDTree(std::vector<psmd::vector<value_t, DIM>> const &vectors) : vectors{vectors}
     {
-
         for (std::size_t i = 0; i < indexes.size(); ++i)
             indexes[i] = i;
 

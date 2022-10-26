@@ -7,6 +7,7 @@
 #include "hello/hello.h"
 #include "core/random.h"
 #include "core/measure.h"
+#include "core/debug.h"
 #include "csv/rapidcsv.h"
 #include "clustering/dbscan.hpp"
 #include "pure_simd/pure_simd.hpp"

@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstdint>
+#include "core/debug.h"
 #include "pure_simd/pure_simd.hpp"
 
 namespace psmd = pure_simd;
@@ -20,7 +21,7 @@ private:
 
     void buildRecursive(std::size_t const from, std::size_t const to, std::size_t const depth)
     {
-        if (to >= from)
+        if (from >= to)
             return;
 
         std::size_t const axis = depth % DIM;
@@ -33,12 +34,20 @@ private:
         buildRecursive(median + 1, to, depth + 1);
     }
 
-    void inSqRadiusRecursive(std::vector<std::size_t> &res, psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity, std::size_t const from, std::size_t const to, std::size_t depth)
+    void inSqRadiusRecursive(std::vector<std::size_t> &res, psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity, std::size_t const from, std::size_t const to, std::size_t const depth, value_t const lower_bound)
+        const
     {
-        if (to >= from)
+
+        if (from >= to)
+        {
             return;
+        }
+
         if (res.size() == capacity)
+        {
+            // printf("hello!!!!\n");
             return;
+        }
 
         std::size_t const axis = depth % DIM;
         std::size_t const median = (from + to) / 2;
@@ -51,6 +60,8 @@ private:
         value_t const partDiff = partValue - partition;
         value_t const partSqDist = partDiff * partDiff;
 
+        // printf("Part: %f\n", partSqDist);
+
         if (partSqDist > sqRadius)
             return;
 
@@ -61,27 +72,30 @@ private:
             sqDist += diff * diff;
         }
 
+        // printf("Full: %f\n", sqDist);
+
         if (sqDist <= sqRadius)
             res.push_back(index);
 
-        inSqRadiusRecursive(res, vector, sqRadius, capacity, from, median, depth + 1);
-        inSqRadiusRecursive(res, vector, sqRadius, capacity, median + 1, to, depth + 1);
+        inSqRadiusRecursive(res, vector, sqRadius, capacity, from, median, depth + 1, partSqDist);
+        inSqRadiusRecursive(res, vector, sqRadius, capacity, median + 1, to, depth + 1, partSqDist);
     }
 
 public:
     StaticKDTree(std::vector<psmd::vector<value_t, DIM>> const &vectors) : vectors{vectors}
     {
+        indexes.resize(vectors.size());
         for (std::size_t i = 0; i < indexes.size(); ++i)
             indexes[i] = i;
 
         buildRecursive(0, vectors.size(), 0);
     }
 
-    std::vector<std::size_t> inSqRadius(psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity)
+    std::vector<std::size_t> inSqRadius(psmd::vector<value_t, DIM> const &vector, value_t const &sqRadius, std::size_t const capacity) const
     {
         std::vector<std::size_t> res;
         res.reserve(capacity);
-        inSqRadiusRecursive(res, vector, sqRadius, capacity, 0, vectors.size(), 0);
+        inSqRadiusRecursive(res, vector, sqRadius, capacity, 0, vectors.size(), 0, 0);
         return res;
     }
 };
